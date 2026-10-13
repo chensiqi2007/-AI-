@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Network Graph Test</title>
+    <style>
+        #networkGraph {
+            position: relative;
+            min-height: 500px;
+            width: 100%;
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+        }
+        .node {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            padding: 5px;
+        }
+        .node.core { background: #f56565; }
+        .node.supplier { background: #4299e1; }
+        .node.customer { background: #48bb78; }
+        .connection-line {
+            position: absolute;
+            background: #cbd5e0;
+            height: 2px;
+            transform-origin: 0 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Network Graph Rendering Test</h1>
+    <div id="networkGraph"></div>
+    <script>
+        const container = document.getElementById('networkGraph');
+        
+        // Set container dimensions
+        container.style.minHeight = '500px';
+        container.style.width = '100%';
+        container.style.position = 'relative';
+        
+        const rect = container.getBoundingClientRect();
+        const width = rect.width > 0 ? rect.width : 800;
+        const height = 500;
+        container.style.height = height + 'px';
+        
+        // Test data
+        const nodes = [
+            { id: 'core1', label: '核心公司', type: 'core', x: 0.5, y: 0.5 },
+            { id: 'supplier1', label: '供应商A', type: 'supplier', x: 0.2, y: 0.3 },
+            { id: 'customer1', label: '客户B', type: 'customer', x: 0.8, y: 0.3 }
+        ];
+        
+        const edges = [
+            { from: 'core1', to: 'supplier1' },
+            { from: 'core1', to: 'customer1' }
+        ];
+        
+        // Draw edges
+        edges.forEach(edge => {
+            const fromNode = nodes.find(n => n.id === edge.from);
+            const toNode = nodes.find(n => n.id === edge.to);
+            
+            if (fromNode && toNode) {
+                const line = document.createElement('div');
+                line.className = 'connection-line';
+                
+                const x1 = fromNode.x * width;
+                const y1 = fromNode.y * height;
+                const x2 = toNode.x * width;
+                const y2 = toNode.y * height;
+                
+                const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                
+                line.style.width = length + 'px';
+                line.style.left = x1 + 'px';
+                line.style.top = y1 + 'px';
+                line.style.transform = `rotate(${angle}deg)`;
+                
+                container.appendChild(line);
+            }
+        });
+        
+        // Draw nodes (WITH FIX)
+        nodes.forEach(node => {
+            const nodeEl = document.createElement('div');
+            nodeEl.className = 'node ' + node.type;
+            nodeEl.textContent = node.label;
+            
+            // Set explicit dimensions for proper rendering
+            const nodeWidth = node.type === 'core' ? 80 : 60;
+            const nodeHeight = node.type === 'core' ? 80 : 60;
+            
+            nodeEl.style.position = 'absolute';
+            nodeEl.style.width = nodeWidth + 'px';
+            nodeEl.style.height = nodeHeight + 'px';
+            nodeEl.style.left = (node.x * width - nodeWidth / 2) + 'px';
+            nodeEl.style.top = (node.y * height - nodeHeight / 2) + 'px';
+            
+            container.appendChild(nodeEl);
+        });
+        
+        console.log('Network graph rendered successfully!');
+        console.log('Container dimensions:', width, 'x', height);
+        console.log('Nodes rendered:', nodes.length);
+    </script>
+</body>
+</html>

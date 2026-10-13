@@ -1,0 +1,31 @@
+{
+  "name": "fraud-detection-platform",
+  "version": "1.0.0",
+  "description": "虚假贸易AI风险预警平台 - iOS风格现代化Web应用",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fraud-detection",
+    "ai",
+    "risk-management",
+    "ios-style"
+  ],
+  "author": "数字创新部",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "axios-extra": "^0.0.5",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.3",
+    "lodash": "^4.18.1",
+    "puppeteer": "^3.3.0"
+  }
+}

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 虚假贸易AI风险预警平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Admin-specific styles */
+        .admin-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .admin-content {
+            flex: 1;
+            padding: var(--spacing-xl);
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin: var(--spacing-sm) 0;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .config-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .config-section h3 {
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+        
+        .config-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .config-row:last-child {
+            border-bottom: none;
+        }
+        
+        .config-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .config-value {
+            color: var(--text-secondary);
+        }
+        
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .logs-table th,
+        .logs-table td {
+            text-align: left;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logs-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .logs-table td {
+            color: var(--text-secondary);
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+        }
+        
+        .login-card {
+            background: var(--bg-secondary);
+            padding: var(--spacing-xxl);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-primary);
+        }
+        
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+            display: none;
+        }
+        
+        .success-message {
+            background: #c6f6d5;
+            color: #2f855a;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+            display: none;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login View -->
+    <div id="login-view" class="login-container">
+        <div class="login-card">
+            <h2>🔐 管理员登录</h2>
+            <div id="login-error" class="error-message"></div>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" required placeholder="请输入管理员用户名">
+                </div>
+                <div class="input-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" required placeholder="请输入密码">
+                </div>
+                  <button type="button" id="sso-login-btn" class="btn btn-secondary" style="width: 100%; margin-top: var(--spacing-md); display: none;">
+                      使用 URLTime 登录
+                  </button>
+                  <div style="text-align: center; margin: var(--spacing-md) 0; color: var(--text-secondary); display: none;" id="sso-divider">或</div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--spacing-lg);">
+                    登录
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard View -->
+    <div id="admin-view" class="admin-container hidden">
+        <div class="admin-header">
+            <div class="admin-title">🛡️ 管理后台</div>
+            <div>
+                <button class="btn btn-secondary btn-small" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span>
+                </button>
+                <button class="btn btn-secondary btn-small" onclick="logout()">
+                    退出登录
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div id="success-message" class="success-message"></div>
+            <div id="error-message" class="error-message"></div>
+
+            <!-- System Statistics -->
+            <h2 style="margin-bottom: var(--spacing-lg);">系统概览</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">总警报数</div>
+                    <div class="stat-value" id="stat-total-alerts">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">待处理警报</div>
+                    <div class="stat-value" id="stat-pending-alerts">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">已处理警报</div>
+                    <div class="stat-value" id="stat-resolved-alerts">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">系统运行时间</div>
+                    <div class="stat-value" id="stat-uptime">-</div>
+                </div>
+            </div>
+
+            <!-- System Configuration -->
+            <div class="config-section">
+                <h3>系统配置</h3>
+                <div class="config-row">
+                    <div class="config-label">主题模式</div>
+                    <div>
+                        <select id="config-theme" class="input" onchange="updateConfig()">
+                            <option value="light">浅色</option>
+                            <option value="dark">深色</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">模型类型</div>
+                    <div>
+                        <select id="config-model-type" class="input" onchange="updateConfig()">
+                            <option value="local">本地模型</option>
+                            <option value="cloud">云端模型</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">风险阈值</div>
+                    <div>
+                        <input type="range" id="config-risk-threshold" min="0" max="100" value="75" onchange="updateConfig()" class="input" style="width: 200px;">
+                        <span id="risk-threshold-value">75</span>%
+                    </div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">Base API URL</div>
+                    <div>
+                        <input type="text" id="config-base-url" placeholder="https://api.example.com" class="input" style="width: 300px;">
+                    </div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">思考强度</div>
+                    <div>
+                        <select id="config-reasoning-effort" class="input">
+                            <option value="low">低</option>
+                            <option value="medium">中</option>
+                            <option value="high">高</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Status -->
+            <div class="config-section">
+                <h3>API 状态</h3>
+                <div class="config-row">
+                    <div class="config-label">UAPI 服务</div>
+                    <div class="config-value" id="api-status-uapi">-</div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">雪球 API</div>
+                    <div class="config-value" id="api-status-xueqiu">-</div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">环境</div>
+                    <div class="config-value" id="api-status-env">-</div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">端口</div>
+                    <div class="config-value" id="api-status-port">-</div>
+                </div>
+            </div>
+
+            <!-- Audit Logs -->
+            <div class="config-section">
+                <h3>审计日志</h3>
+                <table class="logs-table">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>操作</th>
+                            <th>用户</th>
+                            <th>详情</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-tbody">
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: var(--spacing-xl);">加载中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>虚假贸易AI风险预警平台</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div id="app" class="app-container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-left">
+                    <button class="nav-icon-btn menu-btn" onclick="toggleSidebar()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="brand-lockup">
+                        <div class="brand-mark">R</div>
+                        <div><h1 class="nav-title">风险预警</h1><span class="brand-subtitle">贸易智能风控中心</span></div>
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <button id="account-button" class="btn btn-secondary" onclick="handleAccount()">登录</button>
+                    <button class="nav-icon-btn" onclick="openSettings()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6m0-12c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6z"></path>
+                            <path d="M19.4 15c-1.6 1.6-4.1 1.6-5.7 0m-3.4 0c-1.6-1.6-1.6-4.1 0-5.7m9.1 9.1c1.6-1.6 1.6-4.1 0-5.7M9 15c-1.6 1.6-4.1 1.6-5.7 0"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 侧边栏 -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <h2>菜单</h2>
+                    <button class="close-btn" onclick="toggleSidebar()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-item active" onclick="showView('dashboard')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>仪表盘</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showView('alerts')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <span>预警列表</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showView('analysis')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                        <span>AI分析</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showView('network')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line>
+                            <line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line>
+                            <line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line>
+                            <line x1="14.83" y1="9.17" x2="18.36" y2="5.64"></line>
+                            <line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line>
+                        </svg>
+                        <span>关系网络</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showView('hotboard')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                        <span>热榜追踪</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showView('financial')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                        <span>财务分析</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 仪表盘视图 -->
+            <div id="dashboard-view" class="view active">
+                <section class="workspace-intro">
+                    <div><span class="eyebrow">运营总览 / 今日工作台</span><h2>风险态势总览</h2><p>聚合交易、资金、关系和外部信息，帮助你优先处理最值得关注的风险。</p></div>
+                    <div class="workspace-actions"><span class="data-status"><i></i> 数据服务正常</span><span class="last-sync">最后同步：刚刚</span></div>
+                </section>
+                <div class="notice-strip"><strong>演示环境</strong><span>当前部分指标使用示例数据；接入生产数据源后将自动替换。</span><button class="text-btn" onclick="showView('analysis')">开始分析 →</button></div>
+                <div class="stats-grid">
+                    <div class="stat-card danger-card">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-content">
+                            <div class="stat-label">高风险预警</div>
+                            <div class="stat-value" id="highRiskCount">0</div>
+                            <div class="stat-trend">实时监控</div>
+                        </div>
+                    </div>
+                    <div class="stat-card warning-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-content">
+                            <div class="stat-label">中风险监控</div>
+                            <div class="stat-value" id="mediumRiskCount">0</div>
+                            <div class="stat-trend">持续跟踪</div>
+                        </div>
+                    </div>
+                    <div class="stat-card info-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-label">今日扫描</div>
+                            <div class="stat-value" id="todayScanned">0</div>
+                            <div class="stat-trend">交易笔数</div>
+                        </div>
+                    </div>
+                    <div class="stat-card success-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <div class="stat-label">拦截金额</div>
+                            <div class="stat-value" id="blockedAmount">0</div>
+                            <div class="stat-trend">万元</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>四大核心AI检测引擎</h3>
+                    </div>
+                    <div class="engines-grid">
+                        <div class="engine-card">
+                            <div class="engine-icon capital">💰</div>
+                            <div class="engine-content">
+                                <h4>资金环路闭环</h4>
+                                <p>追踪资金流向,识别闭环交易</p>
+                                <div class="engine-stats">
+                                    <span>检出率: 87%</span>
+                                    <span class="badge">12 预警</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="engine-card">
+                            <div class="engine-icon relationship">🕸️</div>
+                            <div class="engine-content">
+                                <h4>关联网络穿透</h4>
+                                <p>穿透股权关系,识别空壳公司</p>
+                                <div class="engine-stats">
+                                    <span>深度: 5层</span>
+                                    <span class="badge">18 预警</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="engine-card">
+                            <div class="engine-icon logistics">📦</div>
+                            <div class="engine-content">
+                                <h4>物流真实性校验</h4>
+                                <p>识别一货多押,静态空转</p>
+                                <div class="engine-stats">
+                                    <span>覆盖率: 94%</span>
+                                    <span class="badge">8 预警</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="engine-card">
+                            <div class="engine-icon pricing">📊</div>
+                            <div class="engine-content">
+                                <h4>价格异常偏离</h4>
+                                <p>识别异常价差与偏离</p>
+                                <div class="engine-stats">
+                                    <span>品种: 32</span>
+                                    <span class="badge">9 预警</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>近7日预警趋势</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 预警列表视图 -->
+            <div id="alerts-view" class="view">
+                <div class="view-header">
+                    <h2>实时风险预警</h2>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-level="all">全部</button>
+                        <button class="filter-btn" data-level="high">高风险</button>
+                        <button class="filter-btn" data-level="medium">中风险</button>
+                        <button class="filter-btn" data-level="low">低风险</button>
+                    </div>
+                </div>
+                <div id="alertsList" class="alerts-list"></div>
+            </div>
+
+            <!-- AI分析视图 -->
+            <div id="analysis-view" class="view">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>AI智能分析</h3>
+                    </div>
+                    <div class="analysis-container">
+                        <p id="ai-auth-status" role="status">登录后可使用 AI 分析</p>
+                        <div class="input-group">
+                            <label>分析请求</label>
+                            <textarea id="analysisPrompt" class="input-textarea" rows="4" placeholder="请描述您需要分析的问题..."></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="performAnalysis()">
+                            <span>开始分析</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                        <div id="analysisResult" class="analysis-result"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关系网络视图 -->
+            <div id="network-view" class="view">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>关联关系网络图谱</h3>
+                    </div>
+                    <div id="networkGraph" class="network-graph"></div>
+                </div>
+            </div>
+
+            <!-- 热榜追踪视图 -->
+            <div id="hotboard-view" class="view">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>实时热榜追踪</h3>
+                        <button class="btn btn-secondary btn-small" onclick="loadHotboards()">刷新</button>
+                    </div>
+                    <div id="hotboardsContainer" class="hotboards-container"></div>
+                </div>
+            </div>
+
+            <!-- 财务分析视图 -->
+            <div id="financial-view" class="view">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>雪球财务风险分析</h3>
+                        <button class="btn btn-secondary btn-small" onclick="loadXueqiuData()">刷新</button>
+                    </div>
+                    <div id="financialContainer" class="financial-container"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 设置面板 -->
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>系统设置</h2>
+                    <button class="close-btn" onclick="closeSettings()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- 外观设置 -->
+                    <div class="settings-section">
+                        <h3>外观</h3>
+                        <div class="setting-item">
+                            <div class="setting-label">
+                                <span>深色模式</span>
+                                <p class="setting-desc">切换深色/浅色主题</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- AI模型设置 -->
+                    <div class="settings-section">
+                        <h3>AI模型配置</h3>
+                        <div class="setting-item">
+                            <div class="setting-label">
+                                <span>模型类型</span>
+                                <p class="setting-desc">选择本地或云端模型</p>
+                            </div>
+                            <div class="segmented-control">
+                                <button class="seg-btn active" data-model="local">本地模型</button>
+                                <button class="seg-btn" data-model="cloud">云端模型</button>
+                            </div>
+                        </div>
+
+                        <!-- 本地模型配置 -->
+                        <div id="localModelConfig" class="model-config">
+                            <div class="input-group">
+                                <label>Base URL</label>
+                                <input type="text" id="localBaseUrl" class="input-field" placeholder="http://localhost:11434">
+                            </div>
+                            <div class="input-group">
+                                <label>模型名称</label>
+                                <input type="text" id="localModelName" class="input-field" placeholder="qwen2.5:latest">
+                            </div>
+                            <div class="input-group">
+                                <label>API Key (可选)</label>
+                                <input type="password" id="localApiKey" class="input-field" placeholder="留空表示不需要">
+                            </div>
+                        </div>
+
+                        <!-- 云端模型配置 -->
+                        <div id="cloudModelConfig" class="model-config" style="display: none;">
+                            <div class="input-group">
+                                <label>Base URL</label>
+                                <input type="text" id="cloudBaseUrl" class="input-field" placeholder="https://api.openai.com/v1">
+                            </div>
+                            <div class="input-group">
+                                <label>模型名称</label>
+                                <input type="text" id="cloudModelName" class="input-field" placeholder="gpt-4">
+                            </div>
+                            <div class="input-group">
+                                <label>API Key</label>
+                                <input type="password" id="cloudApiKey" class="input-field" placeholder="sk-...">
+                            </div>
+                        </div>
+
+                        <!-- 思考强度 -->
+                        <div class="setting-item">
+                            <div class="setting-label">
+                                <span>思考强度</span>
+                                <p class="setting-desc">控制AI分析的深度</p>
+                            </div>
+                            <select id="thinkingEffort" class="select-field">
+                                <option value="low">低 - 快速响应</option>
+                                <option value="medium" selected>中 - 平衡性能</option>
+                                <option value="high">高 - 深度分析</option>
+                                <option value="xhigh">极高 - 最佳质量</option>
+                            </select>
+                        </div>
+
+                        <!-- 温度参数 -->
+                        <div class="setting-item">
+                            <div class="setting-label">
+                                <span>温度参数</span>
+                                <p class="setting-desc">当前值: <span id="tempValue">0.7</span></p>
+                            </div>
+                            <input type="range" id="temperature" class="slider-input" min="0" max="2" step="0.1" value="0.7" oninput="updateTempValue(this.value)">
+                        </div>
+
+                        <!-- 最大Token数 -->
+                        <div class="input-group">
+                            <label>最大Token数</label>
+                            <input type="number" id="maxTokens" class="input-field" value="2000" min="100" max="8000">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeSettings()">取消</button>
+                        <button class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载动画 -->
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>正在处理...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
